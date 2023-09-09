@@ -7,22 +7,23 @@ const socketIO = require('socket.io');
 const port = process.env.PORT || 5000;
 
 const app = express();
-app.use(cors())
+
 const server = http.createServer(app);
 const io = socketIO(server, {
-  cors: {
-    origin: 'http://localhost:5173',
+  cors:{
+    origin: 'http://kinjo-meet.onrender.com',
     methods: ['GET', 'POST'],
     credentials: true
   }
 });
+
 
 const onlineUsers = {};
 const onCallUsers = {};
 
 // Sockets management.
 io.on('connection', (socket) => {
-
+  console.log('Connection Established');
   socket.on("infoExchange",(mail)=>{
     onlineUsers[mail] = {id:socket.id};
   })
