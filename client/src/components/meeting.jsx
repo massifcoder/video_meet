@@ -34,15 +34,25 @@ export default function Meeting() {
             cutCalls();
         })
 
+        async function delay() {
+            // Use a Promise to create an asynchronous delay
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(); // Resolve the Promise after 1 second
+              }, 1000); // 1000 milliseconds (1 second)
+            });
+          }
+
         const peer = new Peer(socket.id);
         if (room == socket.id) {
             socket.emit('giveId');
-            socket.on('getId', (id) => {
+            socket.on('getId',(id) => {
                 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-                    .then((stream) => {
+                    .then(async (stream) => {
                         localVideoRef.current.srcObject = stream;
                         // localStream = stream;
                         localStreamRef.current = stream;
+                        await delay();
                         const call = peer.call(id, stream);
                         call.on('stream', (remoteStream) => {
                             remoteVideoRef.current.srcObject = remoteStream;
@@ -55,10 +65,8 @@ export default function Meeting() {
             })
         }
         else {
-            socket.on('returnId', () => {
-                socket.emit('gettingId', socket.id, room);
-            });
-            peer.on('call', (call) => {
+
+            const ask =peer.on('call', (call) => {
                 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                     .then((stream) => {
                         localStreamRef.current = stream;
@@ -69,10 +77,15 @@ export default function Meeting() {
                         })
                         callRef.current = call;
                         peerInstance.current = peer;
+
                     }).catch((err) => {
                         console.log('Failed to get the devices control.', err);
                     })
-            })
+            });
+            console.log(ask);
+            socket.on('returnId', () => {
+                socket.emit('gettingId', socket.id, room);
+            });
         }
         return () => {
             socket.emit('log-out', localStorage.getItem('authToken'));
@@ -126,7 +139,7 @@ export default function Meeting() {
         let showPresents = !showPresent;
         setShowPresent(showPresents);
         console.log(showPresents);
-    
+
         if (callRef.current && callRef.current.peerConnection) {
             const sender = callRef.current.peerConnection.getSenders().find((sender) => sender.track.kind === 'video');
             if (sender) {
@@ -162,60 +175,60 @@ export default function Meeting() {
             }
         }
     };
-    
+
 
 
     return (
         <div className='w-full'>
             <div className="flex justify-between w-full h-fit">
                 <div className="flex space-x-6 px-24 w-full">
-                    <div className={`${showBoard? 'w-1/3':'w-full'}`}>
+                    <div className={`${showBoard ? 'w-1/3' : 'w-full'}`}>
                         <div className={`rounded-2xl video`}>
                             <video ref={remoteVideoRef} className={`rounded-2xl w-full`} autoPlay ></video>
                         </div>
 
                     </div>
-                    <div className={`space-y-4 pb-4 ${showBoard? 'w-full':'w-1/3'}`}>
+                    <div className={`space-y-4 pb-4 ${showBoard ? 'w-full' : 'w-1/3'}`}>
                         <div className="rounded-2xl p-2 video w-full">
-                            <video ref={localVideoRef} className={`rounded-2xl ${showBoard? 'hidden':'visible'}`} autoPlay></video>
-                            <Draw showBoard={showBoard}/>
+                            <video ref={localVideoRef} className={`rounded-2xl ${showBoard ? 'hidden' : 'visible'}`} autoPlay></video>
+                            <Draw showBoard={showBoard} />
                         </div>
-                        <Chat showChat={showChat}/> 
+                        <Chat showChat={showChat} />
                     </div>
 
                 </div>
 
             </div>
-                <div className="flex z-20 space-x-6 justify-start pl-24 fixed w-full bottom-6">
-                    <div onClick={() => { cutCall(!onCall); cutCalls(); }} className={`${onCall ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} p-3 w-fit h-fit rounded-full`}>
-                        <img src={'/call.png'} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={toggleCamera} className={`${showCamera ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
-                        <img src={`/${showCamera ? '' : 'no'}camera.png`} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={toggleMic} className={`${showMic ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} p-3 h-fit w-fit rounded-full`}>
-                        <img src={`/${showMic ? 'mic' : 'mute'}.png`} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={() => { setShowHand(!showHand) }} className={`${!showHand ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
-                        <img src={`/hand.png`} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={() => { setShowBoard(!showBoard) }} className={`${!showBoard ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
-                        <img src={`/wboard.png`} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={() => { setShowChat(!showChat) }} className={`${!showChat ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
-                        <img src={`/chat.png`} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={() => { setShowMusic(!showMusic) }} className={`${!showMusic ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
-                        <img src={`/music.png`} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={screenShare} className={`${!showPresent ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
-                        <img src={`/present.png`} alt="call" className="w-10" />
-                    </div>
-                    <div onClick={() => { setShowOption(!showOption) }} className={`${!showOption ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
-                        <img src={`/dots.png`} alt="call" className="w-10" />
-                    </div>
+            <div className="flex z-20 space-x-6 justify-start pl-24 fixed w-full bottom-6">
+                <div onClick={() => { cutCall(!onCall); cutCalls(); }} className={`${onCall ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} p-3 w-fit h-fit rounded-full`}>
+                    <img src={'/call.png'} alt="call" className="w-10" />
                 </div>
-        
+                <div onClick={toggleCamera} className={`${showCamera ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
+                    <img src={`/${showCamera ? '' : 'no'}camera.png`} alt="call" className="w-10" />
+                </div>
+                <div onClick={toggleMic} className={`${showMic ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} p-3 h-fit w-fit rounded-full`}>
+                    <img src={`/${showMic ? 'mic' : 'mute'}.png`} alt="call" className="w-10" />
+                </div>
+                <div onClick={() => { setShowHand(!showHand) }} className={`${!showHand ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
+                    <img src={`/hand.png`} alt="call" className="w-10" />
+                </div>
+                <div onClick={() => { setShowBoard(!showBoard) }} className={`${!showBoard ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
+                    <img src={`/wboard.png`} alt="call" className="w-10" />
+                </div>
+                <div onClick={() => { setShowChat(!showChat) }} className={`${!showChat ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
+                    <img src={`/chat.png`} alt="call" className="w-10" />
+                </div>
+                <div onClick={() => { setShowMusic(!showMusic) }} className={`${!showMusic ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
+                    <img src={`/music.png`} alt="call" className="w-10" />
+                </div>
+                <div onClick={screenShare} className={`${!showPresent ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
+                    <img src={`/present.png`} alt="call" className="w-10" />
+                </div>
+                <div onClick={() => { setShowOption(!showOption) }} className={`${!showOption ? 'bg-[#3c4043]' : 'bg-[#ea4335]'} h-fit p-3 w-fit rounded-full`}>
+                    <img src={`/dots.png`} alt="call" className="w-10" />
+                </div>
+            </div>
+
         </div>
     );
 }

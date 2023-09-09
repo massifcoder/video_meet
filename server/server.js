@@ -63,6 +63,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('gettingId',(id,room)=>{
+    console.log('For rooom '+room+" the id of other is "+id);
     io.to(room).emit('getId',id);
   })
 
