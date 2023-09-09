@@ -1,8 +1,10 @@
 const express = require('express');
 const cors = require('cors')
 const http = require('http');
+const path = require("path");
 const socketIO = require('socket.io');
 
+const port = process.env.PORT || 5000;
 
 const app = express();
 app.use(cors())
@@ -18,7 +20,7 @@ const io = socketIO(server, {
 const onlineUsers = {};
 const onCallUsers = {};
 
-
+// Sockets management.
 io.on('connection', (socket) => {
 
   socket.on("infoExchange",(mail)=>{
@@ -87,10 +89,14 @@ io.on('connection', (socket) => {
 
 });
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/dist"));
 
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/../client/dist/index.html"));
+  });
+}
 
-
-
-const port = 5000;
 server.listen(port, () => {
+  console.log('Server listening over port ',port);
 });

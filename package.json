@@ -2,12 +2,14 @@
   "name": "kinjomeet",
   "main": "server/server.js",
   "scripts": {
-    "start": "nodemon server/server.js"
+    "start": "nodemon server/server.js",
+    "build": "cd client && npm run build"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
+    "path": "^0.12.7",
     "socket.io": "^4.7.1"
   }
 }
