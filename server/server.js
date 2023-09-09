@@ -10,7 +10,11 @@ const app = express();
 app.use(cors())
 const server = http.createServer(app);
 const io = socketIO(server, {
-  cors
+  cors:{
+    origin: 'http://kinjo-meet.onrender.com',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
 });
 
 app.use(cors({
@@ -23,7 +27,7 @@ const onCallUsers = {};
 
 // Sockets management.
 io.on('connection', (socket) => {
-
+  console.log('Connection Established');
   socket.on("infoExchange",(mail)=>{
     onlineUsers[mail] = {id:socket.id};
   })
