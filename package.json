@@ -1,6 +1,10 @@
 {
   "name": "kinjomeet",
+  "author": "Vishal Sharma",
   "main": "server/server.js",
+  "version": "2.0.0",
+  "description": "Site to call over internet",
+
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
@@ -12,5 +16,8 @@
     "nodemon": "^3.0.1",
     "path": "^0.12.7",
     "socket.io": "^4.7.1"
+  },
+  "engines": {
+    "node": "18.17.1"
   }
 }
