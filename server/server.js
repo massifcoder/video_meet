@@ -13,6 +13,11 @@ const io = socketIO(server, {
   cors
 });
 
+app.use(cors({
+  origin: 'https://kinjo-meet.onrender.com',
+}));
+
+
 const onlineUsers = {};
 const onCallUsers = {};
 
