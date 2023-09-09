@@ -2,7 +2,7 @@
   "name": "kinjomeet",
   "main": "server/server.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
     "build": "cd client && npm run build"
   },
   "dependencies": {
