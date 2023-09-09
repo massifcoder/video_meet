@@ -7,7 +7,7 @@ const socketIO = require('socket.io');
 const port = process.env.PORT || 5000;
 
 const app = express();
-app.use(cors())
+
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors:{
@@ -16,10 +16,6 @@ const io = socketIO(server, {
     credentials: true
   }
 });
-
-app.use(cors({
-  origin: 'https://kinjo-meet.onrender.com',
-}));
 
 
 const onlineUsers = {};
