@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Howl } from 'howler';
 import { useContext, useEffect, useState } from 'react';
 import SocketContext from '../../socketContext';
@@ -19,6 +20,7 @@ export default function DoCaller(props) {
 
     useEffect(() => {
 
+        // eslint-disable-next-line no-unused-vars
         socket.on('reject', (req) => {
             props.setDoCall(false);
         })
@@ -41,6 +43,7 @@ export default function DoCaller(props) {
             callRing.pause();
         }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

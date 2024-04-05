@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 import io from 'socket.io-client';
 import SocketContext from './socketContext';
 const URL = 'ws://localhost:5000';

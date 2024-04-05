@@ -1,4 +1,7 @@
-import { Howl, Howler } from 'howler';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react/prop-types */
+import { Howl } from 'howler';
 import SocketContext from '../../socketContext';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'

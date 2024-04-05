@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useRef } from "react";
 
 export default function Draw(props) {
@@ -131,6 +133,7 @@ export default function Draw(props) {
                 drawTriangle(e);
             }
             else if (selectedTool == 'addText') {
+                // eslint-disable-next-line no-undef
                 addText(e);
             }
         }

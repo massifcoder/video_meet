@@ -14,7 +14,7 @@ export default function Front() {
         const token = localStorage.getItem('authToken')
         socket.emit("infoExchange", token);
 
-        socket.on('reject', (reply) => {
+        socket.on('reject', () => {
             setGettingCall(false);
         });
 
@@ -32,6 +32,7 @@ export default function Front() {
         }
 
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

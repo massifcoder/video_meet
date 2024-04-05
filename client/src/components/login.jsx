@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
@@ -26,6 +26,7 @@ export default function LoginPage() {
     if(token){
         history('/meet');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   return (

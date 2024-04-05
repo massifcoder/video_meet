@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useContext, useEffect,useLayoutEffect, useRef, useState } from "react"
 import SocketContext from '../../socketContext'
 import { useParams } from "react-router-dom";
@@ -10,7 +11,6 @@ export default function MySelf(props) {
     const socket = useContext(SocketContext);
     const [myName,setMyName] = useState('');
     const inputRef = useRef();
-    const videoRef = useRef(null);
     const [messages,setMessage] = useState([]);
     
     useEffect(()=>{
@@ -28,13 +28,14 @@ export default function MySelf(props) {
             socket.off('chat');
             socket.emit('leaveRoom',room);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     useLayoutEffect(() => {
         scrollToLatestMessage();
       }, [messages]);
 
-    const sendMsg = (event)=>{
+    const sendMsg = ()=>{
         const msg = inputRef.current.value;
         inputRef.current.value='';
         scrollToLatestMessage();

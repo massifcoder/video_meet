@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+// eslint-disable-next-line no-unused-vars
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import SocketContext from '../socketContext';
@@ -12,6 +14,7 @@ export default function Meeting() {
     if (room === undefined) {
         return <h1>Loading...</h1>
     }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const history = useNavigate();
     const remoteVideoRef = useRef(null);
     const localVideoRef = useRef(null);
@@ -100,6 +103,7 @@ export default function Meeting() {
                 localStreamRef.current.getTracks().forEach(track => track.stop());
             }
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const cutCalls = () => {

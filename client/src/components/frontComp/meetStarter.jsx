@@ -56,6 +56,7 @@ export default function MeetStarter() {
             socket.off('userInfo');
             socket.off('connect');
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if (doCall) {

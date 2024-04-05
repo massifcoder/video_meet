@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import SocketProvider from './socket'
 import App from './App.jsx'
